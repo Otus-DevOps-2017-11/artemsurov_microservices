@@ -24,3 +24,8 @@
 > docker kill $(docker ps -q)
 > docker rm $(docker ps -a -q)
 > >docker rmi $(docker images -q)
+
+## HW15
+В данном домашнем задании  была выполнена авторизация на GCP для подключения дополнительной docker-machine
+Так же был создан image из dockerfile и запущен контейнер.
+Полученный образ был сохранен в hub.docker
