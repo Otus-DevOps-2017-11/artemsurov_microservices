@@ -21,13 +21,17 @@
 > docker system df 
 
 5. Убить процесс,а потом и ~~закопать~~ удалить из системы контейнер и образ можно с помощью команд:
-> docker kill $(docker ps -q)
-> docker rm $(docker ps -a -q)
-> >docker rmi $(docker images -q)
+1) > docker kill $(docker ps -q)
+2) > docker rm $(docker ps -a -q)
+3) > docker rmi $(docker images -q)
 
 ## HW15
 В данном домашнем задании  была выполнена авторизация на GCP для подключения дополнительной docker-machine
 Так же был создан image из dockerfile и запущен контейнер.
 Полученный образ был сохранен в hub.docker.
 
-Если я правильно понял, разница между docker run --rm -ti tehbilly/htop и docker run --rm --pid host -ti tehbilly/htop в том, что в первом случае это вывод информации о процессах в контейнере, а во втором информация о процессах из инстанса?
+Разница между docker run --rm -ti tehbilly/htop и docker run --rm --pid host -ti tehbilly/htop в том, что в первом случае это вывод информации о процессах в контейнере, а во втором информация о процессах из инстанса.
+
+## HW16
+
+
