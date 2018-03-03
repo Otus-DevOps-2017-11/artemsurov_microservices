@@ -14,5 +14,5 @@ class MyAppTest < Test::Unit::TestCase
   def test_get_request
     get '/'
     assert last_response.ok?
-  end
+  end 
 end
