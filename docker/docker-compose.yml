@@ -18,7 +18,9 @@ services:
     volumes:
       - post_db:/data/db
     networks:
-      - back_net
+      back_net:
+        aliases:
+          comment_db
   ui:
     image: ${USERNAME}/ui:${UIVERSION}
     ports:
@@ -46,6 +48,15 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      - back_net
+      - front_net
+  mongod-exporter:
+    image: eses/mongodb_exporter
+    command:
+      - '-mongodb.uri=mongodb://post_db:27017'
+    volumes:
+      - /tmp:/tmp
     networks:
       - back_net
       - front_net
