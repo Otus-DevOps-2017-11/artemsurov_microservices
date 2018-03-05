@@ -13,7 +13,6 @@ services:
     networks: 
       - back_net
       - front_net
-
   post_db:
     image: mongo:3.2
     volumes:
@@ -47,6 +46,9 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      - back_net
+      - front_net
 
 volumes:
   post_db:
