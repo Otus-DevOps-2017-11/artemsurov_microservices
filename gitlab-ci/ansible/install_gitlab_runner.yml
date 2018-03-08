@@ -1,0 +1,31 @@
+---
+- hosts: gitlab
+  become: true
+  tasks:
+    - name: Установка pip
+      apt:
+        name: python-pip
+
+    - name: Установка docker-py
+      pip:
+        name: docker-py
+
+    - name: Запуск контейнера с гитлабом
+      docker_container:
+        name: gitlab-runner
+        image: gitlab/gitlab-runner:latest
+        restart: true
+        restart_policy: always
+        volumes:
+          - /srv/gitlab-runner/config:/etc/gitlab-runner
+          - /var/run/docker.sock:/var/run/docker.sock
+        command:  
+          - gitlab-runner register --non-interactive --url http://35.198.173.231/
+          - --registration-token thVTr1dFC9ztZn5hrm3V
+          - --description 'Tem`s runner'
+          - --tag-list linux,xenial,ubuntu,docker
+          - --executor docker
+          - --docker-image 'alpine:latest'
+          - --run-untagged	true
+          - --locked	false
+...
