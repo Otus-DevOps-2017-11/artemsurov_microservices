@@ -61,7 +61,7 @@ services:
     ports:
       - 3000:3000
   alertmanager:
-    image: ${USER_NAME}/alertmanager
+    image: ${USERNAME}/alertmanager
     command:
     - '--config.file=/etc/alertmanager/config.yml'
     ports:
