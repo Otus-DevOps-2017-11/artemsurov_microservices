@@ -16,6 +16,8 @@ services:
   node-exporter:
     image: prom/node-exporter:v0.15.2
     user: root
+    deploy:
+      mode: global
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
