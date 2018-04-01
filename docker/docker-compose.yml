@@ -22,11 +22,25 @@ services:
     networks:
       - front_net
     deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 3s
       mode: replicated
-      replicas: 2
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+      update_config:
+        delay: 5s
+        parallelism: 1
+        failure_action: pause
       placement:
         constraints:
           - node.role == worker
+    environment:
+      - ENV=DEV
   post:
     image: ${USERNAME}/post:${POSTVERSION}
     networks:
@@ -38,8 +52,20 @@ services:
     ports:
       - "5000:5000"
     deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 15
+        delay: 1s
       mode: replicated
       replicas: 3
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 300M
+      update_config:
+        delay: 10s
+        parallelism: 2
+        failure_action: rollback
       placement:
         constraints:
           - node.role == worker
@@ -51,19 +77,23 @@ services:
       - back_net
       - front_net
     deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 15
+        delay: 1s
       mode: replicated
-      replicas: 2
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 300M
+      update_config:
+        delay: 10s
+        parallelism: 2
+        failure_action: rollback
       placement:
         constraints:
           - node.role == worker
-  
-  zipkin:
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - back_net
-      - front_net
 
 volumes:
   post_db:
