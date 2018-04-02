@@ -10,10 +10,10 @@ spec:
       app: post
   template:
     metadata:
-      name: post
+      name: post-pod
       labels:
         app: post
     spec:
       containers:
-      - image: chromko/post
+      - image: asurov/post
         name: post
