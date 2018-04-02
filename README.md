@@ -164,7 +164,7 @@ gcloud compute addresses create kubernetes-the-hard-way \
 gcloud compute addresses list --filter="name=('kubernetes-the-hard-way')"
 ```
 
-# По создаем Compute Instances:
+# Посоздаем Compute Instances:
 
 Kubernetes Controllers
 ```
@@ -200,5 +200,10 @@ for i in 0 1 2; do
     --tags kubernetes-the-hard-way,worker
 done
 ```
-# Создаем сертифицированные центры и работаем со сертификатами
+# Создаем сертифицированные центры и работаем с сертификатами
 https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-certificate-authority.md
+
+# Файлы с командами для донастройки
+* Команды для установки etcd находятся  в ```install_etcd.sh```
+* Команды для настройки kubernetes controllers находятся в ```provision_plane.sh```
+* Для настройки kubernetes workers - ```bootstrapping_worker_nodes.sh```
