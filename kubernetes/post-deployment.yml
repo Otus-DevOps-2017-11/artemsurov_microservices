@@ -20,7 +20,7 @@ spec:
         component: post
     spec:
       containers:
-      - image: asurov/post
+      - image: asurov/post:2.0
         name: post
         env:
         - name: POST_DATABASE_HOST

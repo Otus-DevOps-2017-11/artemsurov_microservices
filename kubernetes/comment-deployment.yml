@@ -20,7 +20,7 @@ spec:
         component: comment
     spec:
       containers:
-      - image: asurov/comment
+      - image: asurov/comment:2.0
         name: comment
         env:
         - name: COMMENT_DATABASE_HOST
