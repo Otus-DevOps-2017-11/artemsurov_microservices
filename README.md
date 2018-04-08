@@ -213,3 +213,5 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 
 В этом дз были изучена настройка объектов Deployment и Service.
 И запущено все в minikub и в GKE
+
+## HW 30
