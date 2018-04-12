@@ -4,21 +4,43 @@ services:
     image: mongo:3.2
     volumes:
       - post_db:/data/db
+    deploy:
+      placement:
+        constraints:
+          - node.labels.reliability == high
+          - engine.labels.provider == google
     networks:
       back_net:
         aliases:
           - comment_db
   ui:
     image: ${USERNAME}/ui:${UIVERSION}
+    depends_on:
+      - zipkin
     ports:
       - ${UIPORT}/tcp
     networks:
       - front_net
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: service.ui
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 3s
+      mode: replicated
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+      update_config:
+        delay: 5s
+        parallelism: 1
+        failure_action: pause
+      placement:
+        constraints:
+          - node.role == worker
+    environment:
+      - ENV=DEV
   post:
     image: ${USERNAME}/post:${POSTVERSION}
     networks:
@@ -26,18 +48,52 @@ services:
       - front_net
     depends_on:
       - post_db
+      - zipkin
     ports:
       - "5000:5000"
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: service.post
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 15
+        delay: 1s
+      mode: replicated
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 300M
+      update_config:
+        delay: 10s
+        parallelism: 2
+        failure_action: rollback
+      placement:
+        constraints:
+          - node.role == worker
   comment:
     image: ${USERNAME}/comment:${COMMENTVERSION}
+    depends_on:
+      - zipkin
     networks:
       - back_net
       - front_net
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 15
+        delay: 1s
+      mode: replicated
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 300M
+      update_config:
+        delay: 10s
+        parallelism: 2
+        failure_action: rollback
+      placement:
+        constraints:
+          - node.role == worker
 
 volumes:
   post_db:

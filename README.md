@@ -93,3 +93,25 @@
 В приложения появился трэсинг с помощью зипкина,
 были добавлены контейнеры ElasticStack, Zipkin, Kibana,Fluentd.
 В так же настроенны и изучена работа с Kibana и Fluentd.
+
+##HW 27
+Домашнее задание посвященное работе с docker-compose
+Команда, чтобы создать машину 
+docker-machine create --driver google \
+   --google-project  docker-XXXXXX  \
+   --google-zone europe-west1-b \
+   --google-machine-type g1-small \
+   --google-machine-image $(gcloud compute images list --filter ubuntu-1604-lts --uri) \
+   master-1
+
+Для генерации токенов 
+docker swarm join-token manager/worker
+
+Команда, чтобы добавить машину:
+docker swarm join --token
+SWMTKN-1-5dkxha7z0h9vfxqsoepxqybmehcs7mvfrtml00s8hxnn2nrgep-
+chln12zdzd1805uensy5xouj7 10.132.0.6:2377
+
+docker stack deploy --compose-file=<(docker-compose -f docker-compose.yml config 2>/dev/null) DEV - команда чтобы раскатать конфиг
+
+Выполнил основную часть д/з
