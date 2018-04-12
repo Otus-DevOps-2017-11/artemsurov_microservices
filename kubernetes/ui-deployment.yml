@@ -2,33 +2,29 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: mongo
+  name: ui
+  namespace: dev
   labels:
     app: reddit
-    component: mongo
-    post-db: "true"
-    comment-db: "true"
+    component: ui
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: reddit
-      component: mongo
+      component: ui
   template:
     metadata:
-      name: mongo
+      name: ui-pod
       labels:
         app: reddit
-        component: mongo
-        post-db: "true"
-        comment-db: "true"
+        component: ui
     spec:
       containers:
-      - image: mongo:3.2
-        name: mongo
-        volumeMounts:
-        - name: mongo-persistent-storage
-          mountPath: /data/db
-      volumes:
-      - name: mongo-persistent-storage
-        emptyDir: {}
+      - image: asurov/ui:2.0
+        name: ui
+        env:
+        - name: ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
