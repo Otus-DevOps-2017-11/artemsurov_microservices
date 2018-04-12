@@ -10,7 +10,7 @@ spec:
       app: comment
   template:
     metadata:
-      name: comment
+      name: comment-pod
       labels:
         app: comment
     spec:
