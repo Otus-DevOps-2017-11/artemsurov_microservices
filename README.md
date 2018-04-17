@@ -94,24 +94,116 @@
 были добавлены контейнеры ElasticStack, Zipkin, Kibana,Fluentd.
 В так же настроенны и изучена работа с Kibana и Fluentd.
 
-##HW 27
+## HW 27
 Домашнее задание посвященное работе с docker-compose
 Команда, чтобы создать машину 
+```
 docker-machine create --driver google \
    --google-project  docker-XXXXXX  \
    --google-zone europe-west1-b \
    --google-machine-type g1-small \
    --google-machine-image $(gcloud compute images list --filter ubuntu-1604-lts --uri) \
    master-1
+```
 
 Для генерации токенов 
-docker swarm join-token manager/worker
+>docker swarm join-token manager/worker
 
 Команда, чтобы добавить машину:
+```
 docker swarm join --token
 SWMTKN-1-5dkxha7z0h9vfxqsoepxqybmehcs7mvfrtml00s8hxnn2nrgep-
 chln12zdzd1805uensy5xouj7 10.132.0.6:2377
+```
 
-docker stack deploy --compose-file=<(docker-compose -f docker-compose.yml config 2>/dev/null) DEV - команда чтобы раскатать конфиг
+> docker stack deploy --compose-file=<(docker-compose -f docker-compose.yml config 2>/dev/null) DEV - команда чтобы раскатать конфиг
 
 Выполнил основную часть д/з
+
+## Hw 28 Kubernetes
+
+# Сеть
+Создадим новую VPC сеть:
+```
+gcloud compute networks create kubernetes-the-hard-way --subnet-mode custom
+```
+ и подсеть
+
+```
+gcloud compute networks subnets create kubernetes \
+  --network kubernetes-the-hard-way \
+  --range 10.240.0.0/24
+```
+
+# Firewall
+Создадим правило для Firewall внутри сети:
+```
+gcloud compute firewall-rules create kubernetes-the-hard-way-allow-internal \
+  --allow tcp,udp,icmp \
+  --network kubernetes-the-hard-way \
+  --source-ranges 10.240.0.0/24,10.200.0.0/16
+```
+
+Правило для внешнего доступа
+```
+gcloud compute firewall-rules create kubernetes-the-hard-way-allow-external \
+  --allow tcp:22,tcp:6443,icmp \
+  --network kubernetes-the-hard-way \
+  --source-ranges 0.0.0.0/0
+```
+
+# Заняли внешний IP
+
+```
+gcloud compute addresses create kubernetes-the-hard-way \
+  --region $(gcloud config get-value compute/region)
+```
+
+Проверить его наличие:
+```
+gcloud compute addresses list --filter="name=('kubernetes-the-hard-way')"
+```
+
+# Посоздаем Compute Instances:
+
+Kubernetes Controllers
+```
+for i in 0 1 2; do
+  gcloud compute instances create controller-${i} \
+    --async \
+    --boot-disk-size 200GB \
+    --can-ip-forward \
+    --image-family ubuntu-1604-lts \
+    --image-project ubuntu-os-cloud \
+    --machine-type n1-standard-1 \
+    --private-network-ip 10.240.0.1${i} \
+    --scopes compute-rw,storage-ro,service-management,service-control,logging-write,monitoring \
+    --subnet kubernetes \
+    --tags kubernetes-the-hard-way,controller
+done
+```
+
+Kubernetes Workers
+```
+for i in 0 1 2; do
+  gcloud compute instances create worker-${i} \
+    --async \
+    --boot-disk-size 200GB \
+    --can-ip-forward \
+    --image-family ubuntu-1604-lts \
+    --image-project ubuntu-os-cloud \
+    --machine-type n1-standard-1 \
+    --metadata pod-cidr=10.200.${i}.0/24 \
+    --private-network-ip 10.240.0.2${i} \
+    --scopes compute-rw,storage-ro,service-management,service-control,logging-write,monitoring \
+    --subnet kubernetes \
+    --tags kubernetes-the-hard-way,worker
+done
+```
+# Создаем сертифицированные центры и работаем с сертификатами
+https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-certificate-authority.md
+
+# Файлы с командами для донастройки
+* Команды для установки etcd находятся  в ```install_etcd.sh```
+* Команды для настройки kubernetes controllers находятся в ```provision_plane.sh```
+* Для настройки kubernetes workers - ```bootstrapping_worker_nodes.sh```
