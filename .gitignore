@@ -2,4 +2,4 @@
 src/**/build_info.txt
 docker/.env
 **/Gemfile.lock 
-tls.*
+tls*
