@@ -207,3 +207,9 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 * Команды для установки etcd находятся  в ```install_etcd.sh```
 * Команды для настройки kubernetes controllers находятся в ```provision_plane.sh```
 * Для настройки kubernetes workers - ```bootstrapping_worker_nodes.sh```
+
+## Hw 29 Kubernetes
+Добавил cсылку на приложение http://35.184.168.91:31717/ и  скрин kubernetes dashboard
+
+В этом дз были изучена настройка объектов Deployment и Service.
+И запущено все в minikub и в GKE
