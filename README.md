@@ -226,9 +226,39 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 Для запуска проекта необходим настроенный кластер Kubernetes
 Развернуть проект можно с помощью helm-a в папке kubernetes/Charts хранятся необходимые chart-ы
 
-На ипишники кластера должен запуститься gitlab
+На ипишнике кластера должен запуститься gitlab
 В папке src компонентов хранятся настройки для gitlsb-ci
 
 ## HW 32
 Команда, чтобы обновить состояние Chart-a
 helm upgrade prom . -f custom_values.yml --install 
+
+Необходимо запустить chart c prometheus:
+helm upgrade kubernetes/Charts/prometheus . -f custom_values.yml --install
+
+Запустить несколько экземпляров приложения, чтобы начать собирать с него метрики
+$ helm upgrade reddit-test ./reddit --install
+$ helm upgrade production --namespace production ./reddit --install
+$ helm upgrade staging --namespace staging ./reddit --install
+
+В само charte prometheus был создан файл с custom-values.yml, в котором описываются значения для prometheus.
+В нем мы описали несколько джобов для него.
+
+Для визуализации была скачена и сконфигурирована Grafana
+$ helm upgrade --install grafana stable/grafana --set "server.adminPassword=admin" \
+--set "server.service.type=NodePort" \
+--set "server.ingress.enabled=true" \
+--set "server.ingress.hosts={reddit-grafana}
+
+В нем было добавлены переменный для разделения namespace- ов
+
+Для логирования используется efk
+Объекты для fluend и elasticsearch необходимо создать с помощью kubectl:
+kubectl apply -f ./efk
+Kibane грузим из helm:
+
+$ helm upgrade --install kibana stable/kibana \
+--set "ingress.enabled=true" \
+--set "ingress.hosts={reddit-kibana}" \
+--set "env.ELASTICSEARCH_URL=http://elasticsearch-logging:9200" \
+--version 0.1.1
