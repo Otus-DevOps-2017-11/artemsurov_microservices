@@ -228,3 +228,7 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 
 На ипишники кластера должен запуститься gitlab
 В папке src компонентов хранятся настройки для gitlsb-ci
+
+## HW 32
+Команда, чтобы обновить состояние Chart-a
+helm upgrade prom . -f custom_values.yml --install 

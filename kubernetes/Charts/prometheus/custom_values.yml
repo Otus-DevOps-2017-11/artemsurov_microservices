@@ -808,17 +808,43 @@ serverFiles:
             action: replace
             target_label: kubernetes_pod_name
 
-      - job_name: 'reddit-endpoints'
-        
+      - job_name: 'post-endpoints'
         kubernetes_sd_configs:
           - role: endpoints
-        
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
-          - source_labels: [__meta_kubernetes_service_label_app]
+          - source_labels: [__meta_kubernetes_service_label_component]
             action: keep
-            regex: reddit
+            regex: post
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_service_name]
+            target_label: kubernetes_name
+      
+      - job_name: 'ui-endpoints'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_service_label_(.+)
+          - source_labels: [__meta_kubernetes_service_label_component]
+            action: keep
+            regex: ui
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_service_name]
+            target_label: kubernetes_name
+      
+      - job_name: 'comment-endpoints'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_service_label_(.+)
+          - source_labels: [__meta_kubernetes_service_label_component]
+            action: keep
+            regex: comment
           - source_labels: [__meta_kubernetes_namespace]
             target_label: kubernetes_namespace
           - source_labels: [__meta_kubernetes_service_name]
@@ -830,7 +856,7 @@ serverFiles:
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
-          - source_labels: [__meta_kubernetes_service_label_app, __meta_kubernetes_namespace]
+          - source_labels: [__meta_kubernetes_service_label_component, __meta_kubernetes_namespace]
             action: keep
             regex: reddit;(production|staging)+
           - source_labels: [__meta_kubernetes_namespace]
