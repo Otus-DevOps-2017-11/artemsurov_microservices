@@ -1,0 +1,20 @@
+comment:
+  image:
+    repository: asurov/comment
+    tag: '2.0'
+  service:
+    externalPort: 9292
+
+post:
+  image:
+    repository: asurov/post
+    tag: '2.0'
+    service:
+      externalPort: 5000
+
+ui:
+  image:
+    repository: asurov/ui
+    tag: '2.0'
+    service:
+      externalPort: 9292
