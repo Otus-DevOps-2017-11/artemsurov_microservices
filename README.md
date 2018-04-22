@@ -220,4 +220,11 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 Секьюрный вариант, после часа ожидания так и не заработал
 
 В данном дз были рассмотрены Services, Ingress, LoadBalancer и различные способы взаимодействия с Volume-ами.
- 
+
+## HW 31
+
+Для запуска проекта необходим настроенный кластер Kubernetes
+Развернуть проект можно с помощью helm-a в папке kubernetes/Charts хранятся необходимые chart-ы
+
+На ипишники кластера должен запуститься gitlab
+В папке src компонентов хранятся настройки для gitlsb-ci
