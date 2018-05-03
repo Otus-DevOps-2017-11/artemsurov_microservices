@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: slow
+  storageClassName: mongo-pvc
   resources:
     requests:
       storage: 10Gi
