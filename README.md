@@ -213,3 +213,11 @@ https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-c
 
 В этом дз были изучена настройка объектов Deployment и Service.
 И запущено все в minikub и в GKE
+
+## HW 30
+
+Приложение теперь работает через не секьюрную  Service Ingress здесь http://35.190.0.242/
+Секьюрный вариант, после часа ожидания так и не заработал
+
+В данном дз были рассмотрены Services, Ingress, LoadBalancer и различные способы взаимодействия с Volume-ами.
+ 
